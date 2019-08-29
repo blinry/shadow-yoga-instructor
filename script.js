@@ -6,8 +6,6 @@ const contextOriginal = canvasOriginal.getContext("2d")
 const canvasThreshold = document.getElementById("threshold")
 const contextThreshold = canvasOriginal.getContext("2d")
 
-const captureButton = document.getElementById("capture")
-
 const ratioDisplay = document.getElementById("ratio")
 
 const constraints = {
@@ -59,6 +57,12 @@ function difference(reference, captured, result) {
         result[i * 4 + 2] = captured[i * 4 + 2] - reference[i * 4 + 2]
         result[i * 4 + 3] = captured[i * 4 + 3] - reference[i * 4 + 3]
     }
+}
+
+function updateImageTime() {
+    console.time("updateImage")
+    updateImage()
+    console.timeEnd("updateImage")
 }
 
 function updateImage() {
