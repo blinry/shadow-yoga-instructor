@@ -1,10 +1,12 @@
 function Controls() {
     this.threshold = 100
+    this.compare_mode = false
 }
 
 controls = new Controls()
 gui = new dat.GUI()
 gui.add(controls, "threshold", 0, 255)
+gui.add(controls, "compare_mode", false)
 
 const player = document.getElementById("player")
 
