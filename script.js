@@ -6,6 +6,9 @@ const contextOriginal = canvasOriginal.getContext("2d")
 const canvasThreshold = document.getElementById("threshold")
 const contextThreshold = canvasThreshold.getContext("2d")
 
+const canvasDifference = document.getElementById("difference")
+const contextDifference = canvasDifference.getContext("2d")
+
 const ratioDisplay = document.getElementById("ratio")
 
 const levelImg = document.getElementById("levelImg")
@@ -53,14 +56,17 @@ function threshold(data, level) {
     return black / length
 }
 
-function difference(reference, captured, result) {
-    var length = data.length / 4
+function minimum(reference, captured, result) {
+    console.assert(reference.length == captured.length)
+    console.assert(reference.length == result.length)
+
+    var length = reference.length / 4
 
     for (i = 0; i < length; i++) {
-        result[i * 4 + 0] = captured[i * 4 + 0] - reference[i * 4 + 0]
-        result[i * 4 + 1] = captured[i * 4 + 1] - reference[i * 4 + 1]
-        result[i * 4 + 2] = captured[i * 4 + 2] - reference[i * 4 + 2]
-        result[i * 4 + 3] = captured[i * 4 + 3] - reference[i * 4 + 3]
+        result[i * 4 + 0] = Math.min(captured[i * 4 + 0], reference[i * 4 + 0])
+        result[i * 4 + 1] = Math.min(captured[i * 4 + 1], reference[i * 4 + 1])
+        result[i * 4 + 2] = Math.min(captured[i * 4 + 2], reference[i * 4 + 2])
+        result[i * 4 + 3] = Math.min(captured[i * 4 + 3], reference[i * 4 + 3])
     }
 }
 
@@ -82,21 +88,31 @@ function updateImage() {
 
     var brightPixels = 0
 
-    var frame = contextOriginal.getImageData(
+    var captured = contextOriginal.getImageData(
         0,
         0,
         canvasOriginal.width,
         canvasOriginal.height,
     )
 
-    var ratio = threshold(frame.data, 100)
-    contextThreshold.putImageData(frame, 0, 0)
+    var reference = contextLevel.getImageData(
+        0,
+        0,
+        canvasLevel.width,
+        canvasLevel.height,
+    )
+
+    minimum(captured.data, reference.data, captured.data);
+    contextDifference.putImageData(captured, 0, 0)
+
+    var ratio = threshold(captured.data, 100)
+    contextThreshold.putImageData(captured, 0, 0)
 
     ratioDisplay.innerHTML = ratio
 }
 
 function enableFullscreen() {
-    canvasThreshold.requestFullscreen()
+    canvasLevel.requestFullscreen()
 }
 
 function loadLevel(name) {
@@ -118,5 +134,4 @@ navigator.mediaDevices.getUserMedia(constraints).then(stream => {
 })
 
 loadLevel("shapes/G_shape.png")
-
 setInterval(updateImage, 100)
