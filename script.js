@@ -6,8 +6,6 @@ const contextOriginal = canvasOriginal.getContext("2d")
 const canvasThreshold = document.getElementById("threshold")
 const contextThreshold = canvasOriginal.getContext("2d")
 
-const captureButton = document.getElementById("capture")
-
 const constraints = {
     video: true,
 }
@@ -44,6 +42,12 @@ function threshold(data, level) {
     }
 
     return data
+}
+
+function updateImageTime() {
+    console.time("updateImage")
+    updateImage()
+    console.timeEnd("updateImage")
 }
 
 function updateImage() {
