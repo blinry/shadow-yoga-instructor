@@ -4,7 +4,7 @@ const canvasOriginal = document.getElementById("original")
 const contextOriginal = canvasOriginal.getContext("2d")
 
 const canvasThreshold = document.getElementById("threshold")
-const contextThreshold = canvasOriginal.getContext("2d")
+const contextThreshold = canvasThreshold.getContext("2d")
 
 const ratioDisplay = document.getElementById("ratio")
 
@@ -88,6 +88,10 @@ function updateImage() {
     contextThreshold.putImageData(frame, 0, 0)
 
     ratioDisplay.innerHTML = ratio
+}
+
+function enableFullscreen() {
+    canvasThreshold.requestFullscreen()
 }
 
 // Attach the video stream to the video element and autoplay.
