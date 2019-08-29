@@ -8,12 +8,15 @@ const contextThreshold = canvasOriginal.getContext("2d")
 
 const captureButton = document.getElementById("capture")
 
+const ratioDisplay = document.getElementById("ratio")
+
 const constraints = {
     video: true,
 }
 
 function threshold(data, level) {
     var length = data.length / 4
+    var black = 0
 
     for (i = 0; i < length; i++) {
         var r = data[i * 4 + 0]
@@ -35,6 +38,7 @@ function threshold(data, level) {
             g = 0
             b = 0
             a = 255
+            black ++
         }
 
         data[i * 4 + 0] = r
@@ -43,7 +47,18 @@ function threshold(data, level) {
         data[i * 4 + 3] = a
     }
 
-    return data
+    return black / length
+}
+
+function difference(reference, captured, result) {
+    var length = data.length / 4
+
+    for (i = 0; i < length; i++) {
+        result[i * 4 + 0] = captured[i * 4 + 0] - reference[i * 4 + 0]
+        result[i * 4 + 1] = captured[i * 4 + 1] - reference[i * 4 + 1]
+        result[i * 4 + 2] = captured[i * 4 + 2] - reference[i * 4 + 2]
+        result[i * 4 + 3] = captured[i * 4 + 3] - reference[i * 4 + 3]
+    }
 }
 
 function updateImage() {
@@ -65,8 +80,10 @@ function updateImage() {
         canvasOriginal.height,
     )
 
-    threshold(frame.data, 100)
+    var ratio = threshold(frame.data, 100)
     contextThreshold.putImageData(frame, 0, 0)
+
+    ratioDisplay.innerHTML = ratio
 }
 
 // Attach the video stream to the video element and autoplay.
