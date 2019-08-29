@@ -1,0 +1,31 @@
+Next steps
+----------
+
+- split two modes:
+  - just based on brightness with threshold
+  - using reference image as mask
+
+- test the first mode
+
+- slider to set threshold
+
+- radio button to switch modes
+
+- button to take snapshot for reference image
+
+- test the second mode
+
+Other things
+------------
+
+- randomly choose image
+
+- have a win condition,
+  progress to next level
+
+- add pause button
+
+Eventually
+----------
+
+- hook up some speech generation
