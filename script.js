@@ -1,7 +1,7 @@
 function Controls() {
-    this.threshold = 100
+    this.threshold = 220
     this.compare_mode = false
-    this.win_percent = 0.95
+    this.win_percent = 1.0
 }
 
 controls = new Controls()
@@ -114,17 +114,18 @@ function updateImage() {
         canvasLevel.height,
     )
 
-    minimum(captured.data, reference.data, captured.data)
-    contextDifference.putImageData(captured, 0, 0)
+    // minimum(captured.data, reference.data, captured.data)
+    // contextDifference.putImageData(captured, 0, 0)
 
     var ratio = threshold(captured.data, controls.threshold)
     contextThreshold.putImageData(captured, 0, 0)
 
     ratioDisplay.innerHTML = ratio
-    var win = ratio > controls.win_percent
+
+    var win = ratio >= controls.win_percent
     if (win) {
         ratioDisplay.className = "win"
-        nextLevel()
+        // setTimeout(nextLevel, 1000);
     } else {
         ratioDisplay.className = ""
     }
