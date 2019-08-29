@@ -8,6 +8,11 @@ const contextThreshold = canvasOriginal.getContext("2d")
 
 const ratioDisplay = document.getElementById("ratio")
 
+const levelImg = document.getElementById("levelImg")
+
+const canvasLevel = document.getElementById("level")
+const contextLevel = canvasLevel.getContext("2d")
+
 const constraints = {
     video: true,
 }
@@ -36,7 +41,7 @@ function threshold(data, level) {
             g = 0
             b = 0
             a = 255
-            black ++
+            black++
         }
 
         data[i * 4 + 0] = r
@@ -90,9 +95,25 @@ function updateImage() {
     ratioDisplay.innerHTML = ratio
 }
 
+function loadLevel(name) {
+    levelImg.src = name
+    levelImg.onload = function() {
+        console.log("dsf")
+        contextLevel.drawImage(
+            levelImg,
+            0,
+            0,
+            canvasLevel.width,
+            canvasLevel.height,
+        )
+    }
+}
+
 // Attach the video stream to the video element and autoplay.
 navigator.mediaDevices.getUserMedia(constraints).then(stream => {
     player.srcObject = stream
 })
+
+loadLevel("shapes/G_shape.png")
 
 setInterval(updateImage, 100)
