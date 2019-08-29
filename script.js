@@ -1,3 +1,11 @@
+function Controls() {
+    this.threshold = 100
+}
+
+controls = new Controls()
+gui = new dat.GUI()
+gui.add(controls, "threshold", 0, 255)
+
 const player = document.getElementById("player")
 
 const canvasOriginal = document.getElementById("original")
@@ -102,10 +110,10 @@ function updateImage() {
         canvasLevel.height,
     )
 
-    minimum(captured.data, reference.data, captured.data);
+    minimum(captured.data, reference.data, captured.data)
     contextDifference.putImageData(captured, 0, 0)
 
-    var ratio = threshold(captured.data, 100)
+    var ratio = threshold(captured.data, controls.threshold)
     contextThreshold.putImageData(captured, 0, 0)
 
     ratioDisplay.innerHTML = ratio
