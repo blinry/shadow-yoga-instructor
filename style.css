@@ -4,6 +4,11 @@ img {
     height: 240px;
 }
 
-#levelImg, #player {
+#levelImg,
+#player {
     display: none;
+}
+
+.win {
+    background: green;
 }

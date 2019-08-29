@@ -1,12 +1,14 @@
 function Controls() {
     this.threshold = 100
     this.compare_mode = false
+    this.win_percent = 0.95
 }
 
 controls = new Controls()
 gui = new dat.GUI()
 gui.add(controls, "threshold", 0, 255)
 gui.add(controls, "compare_mode", false)
+gui.add(controls, "win_percent", 0, 1)
 
 const player = document.getElementById("player")
 
@@ -119,6 +121,13 @@ function updateImage() {
     contextThreshold.putImageData(captured, 0, 0)
 
     ratioDisplay.innerHTML = ratio
+    var win = ratio > controls.win_percent
+    if (win) {
+        ratioDisplay.className = "win"
+        nextLevel()
+    } else {
+        ratioDisplay.className = ""
+    }
 }
 
 function enableFullscreen() {
@@ -136,6 +145,18 @@ function loadLevel(name) {
             canvasLevel.height,
         )
     }
+}
+
+function nextLevel() {
+    var levels = [
+        "shapes/C_shape.png",
+        "shapes/F_shape.png",
+        "shapes/G_shape.png",
+        "shapes/SYI_shapes.ai",
+        "shapes/T_shape.png",
+    ]
+    var level = levels[Math.floor(Math.random() * levels.length)]
+    loadLevel(level)
 }
 
 // Attach the video stream to the video element and autoplay.
