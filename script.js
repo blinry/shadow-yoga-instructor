@@ -15,6 +15,9 @@ const player = document.getElementById("player")
 const canvasOriginal = document.getElementById("original")
 const contextOriginal = canvasOriginal.getContext("2d")
 
+const canvasReference = document.getElementById("reference")
+const contextReference = canvasReference.getContext("2d")
+
 const canvasThreshold = document.getElementById("threshold")
 const contextThreshold = canvasThreshold.getContext("2d")
 
@@ -31,6 +34,8 @@ const contextLevel = canvasLevel.getContext("2d")
 const constraints = {
     video: true,
 }
+
+var captured = null;
 
 function threshold(data, level) {
     var length = data.length / 4
@@ -68,17 +73,31 @@ function threshold(data, level) {
     return black / length
 }
 
-function minimum(reference, captured, result) {
-    console.assert(reference.length == captured.length)
-    console.assert(reference.length == result.length)
+function difference(left, right, result) {
+    console.assert(left.length == right.length)
+    console.assert(left.length == result.length)
 
-    var length = reference.length / 4
+    var length = left.length / 4
 
     for (i = 0; i < length; i++) {
-        result[i * 4 + 0] = Math.min(captured[i * 4 + 0], reference[i * 4 + 0])
-        result[i * 4 + 1] = Math.min(captured[i * 4 + 1], reference[i * 4 + 1])
-        result[i * 4 + 2] = Math.min(captured[i * 4 + 2], reference[i * 4 + 2])
-        result[i * 4 + 3] = Math.min(captured[i * 4 + 3], reference[i * 4 + 3])
+        result[i * 4 + 0] = Math.abs(right[i * 4 + 0] - left[i * 4 + 0])
+        result[i * 4 + 1] = Math.abs(right[i * 4 + 1] - left[i * 4 + 1])
+        result[i * 4 + 2] = Math.abs(right[i * 4 + 2] - left[i * 4 + 2])
+        result[i * 4 + 3] = 255
+    }
+}
+
+function minimum(left, right, result) {
+    console.assert(left.length == right.length)
+    console.assert(left.length == result.length)
+
+    var length = left.length / 4
+
+    for (i = 0; i < length; i++) {
+        result[i * 4 + 0] = Math.min(right[i * 4 + 0], left[i * 4 + 0])
+        result[i * 4 + 1] = Math.min(right[i * 4 + 1], left[i * 4 + 1])
+        result[i * 4 + 2] = Math.min(right[i * 4 + 2], left[i * 4 + 2])
+        result[i * 4 + 3] = 255
     }
 }
 
@@ -100,39 +119,55 @@ function updateImage() {
 
     var brightPixels = 0
 
-    var captured = contextOriginal.getImageData(
+    if(captured != null) {
+        var image = contextOriginal.getImageData(
+            0,
+            0,
+            canvasOriginal.width,
+            canvasOriginal.height,
+        )
+
+        difference(image.data, captured.data, image.data)
+        console.log(canvasDifference)
+        console.log(contextDifference)
+
+        contextDifference.beginPath()
+        contextDifference.rect(0,0,10,10)
+        contextDifference.fillStyle = "yellow"
+        contextDifference.fill()
+
+        contextDifference.putImageData(image, 0, 0)
+
+        var ratio = threshold(image.data, controls.threshold)
+        contextThreshold.putImageData(image, 0, 0)
+
+        ratioDisplay.innerHTML = ratio
+
+        var win = ratio >= controls.win_percent
+        if (win) {
+            ratioDisplay.className = "win"
+            // nextLevel();
+        } else {
+            ratioDisplay.className = ""
+        }
+    }
+}
+
+function enableFullscreen() {
+    canvasLevel.requestFullscreen()
+}
+
+function captureReference() {
+    captured = contextOriginal.getImageData(
         0,
         0,
         canvasOriginal.width,
         canvasOriginal.height,
     )
 
-    var reference = contextLevel.getImageData(
-        0,
-        0,
-        canvasLevel.width,
-        canvasLevel.height,
-    )
+    console.log("capture reference")
 
-    // minimum(captured.data, reference.data, captured.data)
-    // contextDifference.putImageData(captured, 0, 0)
-
-    var ratio = threshold(captured.data, controls.threshold)
-    contextThreshold.putImageData(captured, 0, 0)
-
-    ratioDisplay.innerHTML = ratio
-
-    var win = ratio >= controls.win_percent
-    if (win) {
-        ratioDisplay.className = "win"
-        // setTimeout(nextLevel, 1000);
-    } else {
-        ratioDisplay.className = ""
-    }
-}
-
-function enableFullscreen() {
-    canvasLevel.requestFullscreen()
+    contextReference.putImageData(captured, 0, 0)
 }
 
 function loadLevel(name) {
