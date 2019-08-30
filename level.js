@@ -1,7 +1,7 @@
-const levelImg = document.getElementById("levelImg")
+// const levelImg = document.getElementById("levelImg")
 
-const canvas = document.getElementById("level")
-const canvasContext = canvas.getContext("2d")
+// const canvas = document.getElementById("level")
+// const canvasContext = canvas.getContext("2d")
 const winDiv = document.getElementById("win")
 //const loseDiv = document.getElementById("lose")
 
@@ -15,9 +15,9 @@ function message_receive(ev) {
         //canvasDiv.style.backgroundImage = "url(" + message + ")"
 
         levelImg.src = message
-        levelImg.onload = function() {
-            canvasContext.drawImage(levelImg, 0, 0, canvas.width, canvas.height)
-        }
+        // levelImg.onload = function() {
+        //     canvasContext.drawImage(levelImg, 0, 0, canvas.width, canvas.height)
+        // }
     } else if (ev.key == "shadowwin") {
         let percent = Math.min(Math.max(ev.newValue, 0), 1) * 100
         winDiv.style.height = percent + "vh"

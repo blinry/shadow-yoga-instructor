@@ -199,18 +199,15 @@ function updateImage() {
 }
 
 function takeSnapshot() {
-    var image = contextThreshold.getImageData(
-        0,
-        0,
-        canvasOriginal.width,
-        canvasOriginal.height,
-    )
-
     console.log("taking snapshot")
-    localStorage.setItem("shadowimage", image)
+    var dataURL = canvasThreshold.toDataURL("image/png");
+    // localStorage.setItem("shadowlevel", dataURL.replace(/^data:image\/(png|jpg);base64,/, ""))
+    localStorage.setItem("shadowlevel", dataURL)
 }
 
 function resetGame() {
+    hasWon = false
+    reference = null
     nextLevel()
     setTimeout(captureReference, 1000)
     controls.update = true
