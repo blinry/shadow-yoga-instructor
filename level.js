@@ -1,6 +1,7 @@
-//const levelImg = document.getElementById("levelImg")
+const levelImg = document.getElementById("levelImg")
 
-const canvasDiv = document.getElementById("level")
+const canvas = document.getElementById("level")
+const canvasContext = canvas.getContext("2d")
 const winDiv = document.getElementById("win")
 //const loseDiv = document.getElementById("lose")
 
@@ -11,21 +12,18 @@ function message_receive(ev) {
         var message = ev.newValue
         console.log(message)
 
-        canvasDiv.style.backgroundImage = "url(" + message + ")"
+        //canvasDiv.style.backgroundImage = "url(" + message + ")"
 
-        /*levelImg.src = message
+        levelImg.src = message
         levelImg.onload = function() {
-            contextLevel.drawImage(
-                levelImg,
-                0,
-                0,
-                canvasLevel.width,
-                canvasLevel.height,
-            )
-        }*/
+            canvasContext.drawImage(levelImg, 0, 0, canvas.width, canvas.height)
+        }
     } else if (ev.key == "shadowwin") {
         let percent = Math.min(Math.max(ev.newValue, 0), 1) * 100
         winDiv.style.height = percent + "vh"
         console.log(percent)
+    } else if (ev.key == "shadowimage") {
+        console.log("got img")
+        canvasContext.putImageData(ev.newValue, 0, 0)
     }
 }

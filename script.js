@@ -158,14 +158,15 @@ function updateImage() {
             canvasOriginal.height,
         )
 
-        if(!hasWon) {
-            covered = thresholdPerChannel(image.data, controls.threshold)
-            contextThreshold.putImageData(image, 0, 0)
+        covered = thresholdPerChannel(image.data, controls.threshold)
+        contextThreshold.putImageData(image, 0, 0)
 
+        if (!hasWon) {
             white = 1 - covered.white / (goal.white + 1)
             red = 1 - covered.red / (goal.red + 1)
 
-            whiteCoveredPercent = (goal.white - covered.white) / (goal.white + 1)
+            whiteCoveredPercent =
+                (goal.white - covered.white) / (goal.white + 1)
 
             ratio = whiteCoveredPercent
             ratioBar = ratio / controls.win_percent
@@ -187,7 +188,7 @@ function updateImage() {
             if (win) {
                 ratioDisplay.className = "win"
                 hasWon = true
-                localStorage.setItem("shadowimage", "green")
+                localStorage.setItem("shadowlevel", "shapes/green.png")
                 setTimeout(takeSnapshot, 1000)
                 // nextLevel();
             } else {
@@ -205,6 +206,7 @@ function takeSnapshot() {
         canvasOriginal.height,
     )
 
+    console.log("taking snapshot")
     localStorage.setItem("shadowimage", image)
 }
 

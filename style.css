@@ -17,14 +17,12 @@ html,
 body {
     height: 100%;
     margin: 0;
+    background: black;
 }
 
 #level {
-    background: black;
-    background-size: contain;
-    background-position: center center;
-    background-repeat: no-repeat;
     min-height: 100%;
+    margin: 0 auto;
 }
 
 #win,
