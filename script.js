@@ -37,6 +37,25 @@ const constraints = {
 
 var captured = null;
 
+function thresholdPerChannel(data, level) {
+    var length = data.length / 4
+    var result = {
+        red   : 0,
+        green : 0,
+        blue  : 0
+    }
+
+    for (i = 0; i < length; i++) {
+        if(data[i * 4 + 0] > level) { data[i * 4 + 0] = 255; result.red   ++ } else { data[i * 4 + 0] = 0 }
+        if(data[i * 4 + 1] > level) { data[i * 4 + 1] = 255; result.green ++ } else { data[i * 4 + 1] = 0 }
+        if(data[i * 4 + 2] > level) { data[i * 4 + 2] = 255; result.blue  ++ } else { data[i * 4 + 2] = 0 }
+        data[i * 4 + 3] = 255
+    }
+
+    return result
+}
+
+
 function threshold(data, level) {
     var length = data.length / 4
     var black = 0
@@ -80,9 +99,9 @@ function difference(left, right, result) {
     var length = left.length / 4
 
     for (i = 0; i < length; i++) {
-        result[i * 4 + 0] = Math.abs(right[i * 4 + 0] - left[i * 4 + 0])
-        result[i * 4 + 1] = Math.abs(right[i * 4 + 1] - left[i * 4 + 1])
-        result[i * 4 + 2] = Math.abs(right[i * 4 + 2] - left[i * 4 + 2])
+        result[i * 4 + 0] = Math.max(0, right[i * 4 + 0] - left[i * 4 + 0])
+        result[i * 4 + 1] = Math.max(0, right[i * 4 + 1] - left[i * 4 + 1])
+        result[i * 4 + 2] = Math.max(0, right[i * 4 + 2] - left[i * 4 + 2])
         result[i * 4 + 3] = 255
     }
 }
@@ -127,29 +146,18 @@ function updateImage() {
             canvasOriginal.height,
         )
 
-        difference(image.data, captured.data, image.data)
-        console.log(canvasDifference)
-        console.log(contextDifference)
-
-        contextDifference.beginPath()
-        contextDifference.rect(0,0,10,10)
-        contextDifference.fillStyle = "yellow"
-        contextDifference.fill()
-
-        contextDifference.putImageData(image, 0, 0)
-
-        var ratio = threshold(image.data, controls.threshold)
+        thresholdPerChannel(image.data, controls.threshold)
         contextThreshold.putImageData(image, 0, 0)
 
         ratioDisplay.innerHTML = ratio
 
-        var win = ratio >= controls.win_percent
-        if (win) {
-            ratioDisplay.className = "win"
-            // nextLevel();
-        } else {
-            ratioDisplay.className = ""
-        }
+        // var win = ratio >= controls.win_percent
+        // if (win) {
+        //     ratioDisplay.className = "win"
+        //     // nextLevel();
+        // } else {
+        //     ratioDisplay.className = ""
+        // }
     }
 }
 
@@ -168,6 +176,9 @@ function captureReference() {
     console.log("capture reference")
 
     contextReference.putImageData(captured, 0, 0)
+
+    thresholdPerChannel(captured.data, controls.threshold)
+    contextDifference.putImageData(captured, 0, 0)
 }
 
 function loadLevel(name) {
