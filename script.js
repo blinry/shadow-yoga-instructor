@@ -33,6 +33,8 @@ const constraints = {
 var reference = null
 var goal = {white: 0, red: 0}
 
+var hasWon = false
+
 function thresholdPerChannel(data, level) {
     var length = data.length / 4
 
@@ -156,38 +158,54 @@ function updateImage() {
             canvasOriginal.height,
         )
 
-        covered = thresholdPerChannel(image.data, controls.threshold)
-        contextThreshold.putImageData(image, 0, 0)
+        if(!hasWon) {
+            covered = thresholdPerChannel(image.data, controls.threshold)
+            contextThreshold.putImageData(image, 0, 0)
 
-        white = 1 - covered.white / (goal.white + 1)
-        red = 1 - covered.red / (goal.red + 1)
+            white = 1 - covered.white / (goal.white + 1)
+            red = 1 - covered.red / (goal.red + 1)
 
-        whiteCoveredPercent = (goal.white - covered.white) / (goal.white + 1)
+            whiteCoveredPercent = (goal.white - covered.white) / (goal.white + 1)
 
-        ratio = whiteCoveredPercent
-        ratioBar = ratio / controls.win_percent
-        localStorage.setItem("shadowwin", ratioBar)
-        ratioDisplay.innerHTML =
-            "ratio: " +
-            ratio +
-            " (white: " +
-            covered.white +
-            "/" +
-            goal.white +
-            ", red: " +
-            covered.red +
-            "/" +
-            goal.red +
-            ")"
+            ratio = whiteCoveredPercent
+            ratioBar = ratio / controls.win_percent
+            localStorage.setItem("shadowwin", ratioBar)
+            ratioDisplay.innerHTML =
+                "ratio: " +
+                ratio +
+                " (white: " +
+                covered.white +
+                "/" +
+                goal.white +
+                ", red: " +
+                covered.red +
+                "/" +
+                goal.red +
+                ")"
 
-        var win = ratio >= controls.win_percent
-        if (win) {
-            ratioDisplay.className = "win"
-            // nextLevel();
-        } else {
-            ratioDisplay.className = ""
+            var win = ratio >= controls.win_percent
+            if (win) {
+                ratioDisplay.className = "win"
+                hasWon = true
+                localStorage.setItem("shadowimage", "green")
+                setTimeout(takeSnapshot, 1000)
+                // nextLevel();
+            } else {
+                ratioDisplay.className = ""
+            }
         }
     }
+}
+
+function takeSnapshot() {
+    var image = contextThreshold.getImageData(
+        0,
+        0,
+        canvasOriginal.width,
+        canvasOriginal.height,
+    )
+
+    localStorage.setItem("shadowimage", image)
 }
 
 function resetGame() {
