@@ -1,13 +1,13 @@
 function Controls() {
     this.threshold = 150
-    this.compare_mode = false
+    this.update = true
     this.win_percent = 0.95
 }
 
 controls = new Controls()
 gui = new dat.GUI()
 gui.add(controls, "threshold", 0, 255)
-gui.add(controls, "compare_mode", false)
+gui.add(controls, "update", true)
 gui.add(controls, "win_percent", 0, 1)
 
 const player = document.getElementById("player")
@@ -31,12 +31,13 @@ const constraints = {
 }
 
 var reference = null
-var referenceWhite = 0
+var goal = { white: 0, red: 0 }
 
 function thresholdPerChannel(data, level) {
     var length = data.length / 4
 
     var white = 0
+    var red   = 0
 
     for (i = 0; i < length; i++) {
         if(data[i * 4 + 0] > level) { data[i * 4 + 0] = 255; } else { data[i * 4 + 0] = 0 }
@@ -44,10 +45,11 @@ function thresholdPerChannel(data, level) {
         if(data[i * 4 + 2] > level) { data[i * 4 + 2] = 255; } else { data[i * 4 + 2] = 0 }
         data[i * 4 + 3] = 255
 
-        if(data[i * 4 + 0] && data[i * 4 + 1] && data[i * 4 + 2]) white ++
+        if( data[i * 4 + 0] &&  data[i * 4 + 1] &&  data[i * 4 + 2]) white ++
+        if( data[i * 4 + 0] && !data[i * 4 + 1] && !data[i * 4 + 2]) red   ++
     }
 
-    return white
+    return { white: white, red: red }
 }
 
 
@@ -84,7 +86,7 @@ function threshold(data, level) {
         data[i * 4 + 3] = a
     }
 
-    return white
+    return { white: white, red: 0 }
 }
 
 function difference(left, right, result) {
@@ -122,6 +124,9 @@ function updateImageTime() {
 }
 
 function updateImage() {
+    if(!controls.update)
+        return
+
     // Draw the video frame to the canvas.
     contextOriginal.drawImage(
         player,
@@ -141,11 +146,14 @@ function updateImage() {
             canvasOriginal.height,
         )
 
-        coveredWhite = thresholdPerChannel(image.data, controls.threshold)
+        covered = thresholdPerChannel(image.data, controls.threshold)
         contextThreshold.putImageData(image, 0, 0)
 
-        ratio = 1 - coveredWhite / referenceWhite
-        ratioDisplay.innerHTML = ratio
+        white = 1 - covered.white / goal.white
+        red   = 1 - covered.red   / goal.red
+
+        ratio = white - red
+        ratioDisplay.innerHTML = "ratio: " + ratio + " (white: " + covered.white + "/" + goal.white + ", red: " + covered.red + "/" + goal.red + ")"
 
         var win = ratio >= controls.win_percent
         if (win) {
@@ -169,7 +177,7 @@ function captureReference() {
 
     contextReference.putImageData(reference, 0, 0)
 
-    referenceWhite = thresholdPerChannel(reference.data, controls.threshold)
+    goal = thresholdPerChannel(reference.data, controls.threshold)
     contextDifference.putImageData(reference, 0, 0)
 }
 
