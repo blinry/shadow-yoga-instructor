@@ -1,7 +1,7 @@
 function Controls() {
     this.threshold = 220
     this.compare_mode = false
-    this.win_percent = 1.0
+    this.win_percent = 0.99
 }
 
 controls = new Controls()
@@ -125,7 +125,7 @@ function updateImage() {
     var win = ratio >= controls.win_percent
     if (win) {
         ratioDisplay.className = "win"
-        // setTimeout(nextLevel, 1000);
+        nextLevel()
     } else {
         ratioDisplay.className = ""
     }
