@@ -149,8 +149,8 @@ function updateImage() {
         covered = thresholdPerChannel(image.data, controls.threshold)
         contextThreshold.putImageData(image, 0, 0)
 
-        white = 1 - covered.white / goal.white
-        red   = 1 - covered.red   / goal.red
+        white = 1 - covered.white / (goal.white+1)
+        red   = 1 - covered.red   / (goal.red+1)
 
         ratio = white - red
         ratioDisplay.innerHTML = "ratio: " + ratio + " (white: " + covered.white + "/" + goal.white + ", red: " + covered.red + "/" + goal.red + ")"
