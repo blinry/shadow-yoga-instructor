@@ -165,6 +165,12 @@ function updateImage() {
     }
 }
 
+function resetGame() {
+    nextLevel()
+    setTimeout(captureReference, 200)
+    controls.update = true
+}
+
 function captureReference() {
     reference = contextOriginal.getImageData(
         0,
@@ -173,10 +179,7 @@ function captureReference() {
         canvasOriginal.height,
     )
 
-    console.log("capture reference")
-
     contextReference.putImageData(reference, 0, 0)
-
     goal = thresholdPerChannel(reference.data, controls.threshold)
     contextDifference.putImageData(reference, 0, 0)
 }
