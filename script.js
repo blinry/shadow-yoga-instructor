@@ -1,7 +1,7 @@
 function Controls() {
-    this.threshold = 220
+    this.threshold = 150
     this.compare_mode = false
-    this.win_percent = 0.99
+    this.win_percent = 0.95
 }
 
 controls = new Controls()
@@ -30,30 +30,30 @@ const constraints = {
     video: true,
 }
 
-var captured = null;
+var reference = null
+var referenceWhite = 0
 
 function thresholdPerChannel(data, level) {
     var length = data.length / 4
-    var result = {
-        red   : 0,
-        green : 0,
-        blue  : 0
-    }
+
+    var white = 0
 
     for (i = 0; i < length; i++) {
-        if(data[i * 4 + 0] > level) { data[i * 4 + 0] = 255; result.red   ++ } else { data[i * 4 + 0] = 0 }
-        if(data[i * 4 + 1] > level) { data[i * 4 + 1] = 255; result.green ++ } else { data[i * 4 + 1] = 0 }
-        if(data[i * 4 + 2] > level) { data[i * 4 + 2] = 255; result.blue  ++ } else { data[i * 4 + 2] = 0 }
+        if(data[i * 4 + 0] > level) { data[i * 4 + 0] = 255; } else { data[i * 4 + 0] = 0 }
+        if(data[i * 4 + 1] > level) { data[i * 4 + 1] = 255; } else { data[i * 4 + 1] = 0 }
+        if(data[i * 4 + 2] > level) { data[i * 4 + 2] = 255; } else { data[i * 4 + 2] = 0 }
         data[i * 4 + 3] = 255
+
+        if(data[i * 4 + 0] && data[i * 4 + 1] && data[i * 4 + 2]) white ++
     }
 
-    return result
+    return white
 }
 
 
 function threshold(data, level) {
     var length = data.length / 4
-    var black = 0
+    var white = 0
 
     for (i = 0; i < length; i++) {
         var r = data[i * 4 + 0]
@@ -70,12 +70,12 @@ function threshold(data, level) {
             g = 255
             b = 255
             a = 255
+            white++
         } else {
             r = 0
             g = 0
             b = 0
             a = 255
-            black++
         }
 
         data[i * 4 + 0] = r
@@ -84,7 +84,7 @@ function threshold(data, level) {
         data[i * 4 + 3] = a
     }
 
-    return black / length
+    return white
 }
 
 function difference(left, right, result) {
@@ -133,7 +133,7 @@ function updateImage() {
 
     var brightPixels = 0
 
-    if(captured != null) {
+    if(reference != null) {
         var image = contextOriginal.getImageData(
             0,
             0,
@@ -141,23 +141,24 @@ function updateImage() {
             canvasOriginal.height,
         )
 
-        thresholdPerChannel(image.data, controls.threshold)
+        coveredWhite = thresholdPerChannel(image.data, controls.threshold)
         contextThreshold.putImageData(image, 0, 0)
 
+        ratio = 1 - coveredWhite / referenceWhite
         ratioDisplay.innerHTML = ratio
 
-        // var win = ratio >= controls.win_percent
-        // if (win) {
-        //     ratioDisplay.className = "win"
-        //     // nextLevel();
-        // } else {
-        //     ratioDisplay.className = ""
-        // }
+        var win = ratio >= controls.win_percent
+        if (win) {
+            ratioDisplay.className = "win"
+            // nextLevel();
+        } else {
+            ratioDisplay.className = ""
+        }
     }
 }
 
 function captureReference() {
-    captured = contextOriginal.getImageData(
+    reference = contextOriginal.getImageData(
         0,
         0,
         canvasOriginal.width,
@@ -166,10 +167,10 @@ function captureReference() {
 
     console.log("capture reference")
 
-    contextReference.putImageData(captured, 0, 0)
+    contextReference.putImageData(reference, 0, 0)
 
-    thresholdPerChannel(captured.data, controls.threshold)
-    contextDifference.putImageData(captured, 0, 0)
+    referenceWhite = thresholdPerChannel(reference.data, controls.threshold)
+    contextDifference.putImageData(reference, 0, 0)
 }
 
 function loadLevel(name) {
