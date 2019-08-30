@@ -31,27 +31,38 @@ const constraints = {
 }
 
 var reference = null
-var goal = { white: 0, red: 0 }
+var goal = {white: 0, red: 0}
 
 function thresholdPerChannel(data, level) {
     var length = data.length / 4
 
     var white = 0
-    var red   = 0
+    var red = 0
 
     for (i = 0; i < length; i++) {
-        if(data[i * 4 + 0] > level) { data[i * 4 + 0] = 255; } else { data[i * 4 + 0] = 0 }
-        if(data[i * 4 + 1] > level) { data[i * 4 + 1] = 255; } else { data[i * 4 + 1] = 0 }
-        if(data[i * 4 + 2] > level) { data[i * 4 + 2] = 255; } else { data[i * 4 + 2] = 0 }
+        if (data[i * 4 + 0] > level) {
+            data[i * 4 + 0] = 255
+        } else {
+            data[i * 4 + 0] = 0
+        }
+        if (data[i * 4 + 1] > level) {
+            data[i * 4 + 1] = 255
+        } else {
+            data[i * 4 + 1] = 0
+        }
+        if (data[i * 4 + 2] > level) {
+            data[i * 4 + 2] = 255
+        } else {
+            data[i * 4 + 2] = 0
+        }
         data[i * 4 + 3] = 255
 
-        if( data[i * 4 + 0] &&  data[i * 4 + 1] &&  data[i * 4 + 2]) white ++
-        if( data[i * 4 + 0] && !data[i * 4 + 1] && !data[i * 4 + 2]) red   ++
+        if (data[i * 4 + 0] && data[i * 4 + 1] && data[i * 4 + 2]) white++
+        if (data[i * 4 + 0] && !data[i * 4 + 1] && !data[i * 4 + 2]) red++
     }
 
-    return { white: white, red: red }
+    return {white: white, red: red}
 }
-
 
 function threshold(data, level) {
     var length = data.length / 4
@@ -86,7 +97,7 @@ function threshold(data, level) {
         data[i * 4 + 3] = a
     }
 
-    return { white: white, red: 0 }
+    return {white: white, red: 0}
 }
 
 function difference(left, right, result) {
@@ -124,8 +135,7 @@ function updateImageTime() {
 }
 
 function updateImage() {
-    if(!controls.update)
-        return
+    if (!controls.update) return
 
     // Draw the video frame to the canvas.
     contextOriginal.drawImage(
@@ -138,7 +148,7 @@ function updateImage() {
 
     var brightPixels = 0
 
-    if(reference != null) {
+    if (reference != null) {
         var image = contextOriginal.getImageData(
             0,
             0,
@@ -149,11 +159,23 @@ function updateImage() {
         covered = thresholdPerChannel(image.data, controls.threshold)
         contextThreshold.putImageData(image, 0, 0)
 
-        white = 1 - covered.white / (goal.white+1)
-        red   = 1 - covered.red   / (goal.red+1)
+        white = 1 - covered.white / (goal.white + 1)
+        red = 1 - covered.red / (goal.red + 1)
 
         ratio = white - red
-        ratioDisplay.innerHTML = "ratio: " + ratio + " (white: " + covered.white + "/" + goal.white + ", red: " + covered.red + "/" + goal.red + ")"
+        localStorage.setItem("shadowwin", ratio)
+        ratioDisplay.innerHTML =
+            "ratio: " +
+            ratio +
+            " (white: " +
+            covered.white +
+            "/" +
+            goal.white +
+            ", red: " +
+            covered.red +
+            "/" +
+            goal.red +
+            ")"
 
         var win = ratio >= controls.win_percent
         if (win) {

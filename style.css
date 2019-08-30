@@ -26,3 +26,21 @@ body {
     background-repeat: no-repeat;
     min-height: 100%;
 }
+
+#win,
+#lose {
+    position: absolute;
+    bottom: 0;
+    height: 100vw;
+    width: 2vw;
+}
+
+#win {
+    background: green;
+    left: 0;
+}
+
+#lose {
+    background: red;
+    left: 2vw;
+}
