@@ -162,8 +162,11 @@ function updateImage() {
         white = 1 - covered.white / (goal.white + 1)
         red = 1 - covered.red / (goal.red + 1)
 
-        ratio = white - red
-        localStorage.setItem("shadowwin", ratio)
+        whiteCoveredPercent = (goal.white - covered.white) / (goal.white + 1)
+
+        ratio = whiteCoveredPercent
+        ratioBar = ratio / controls.win_percent
+        localStorage.setItem("shadowwin", ratioBar)
         ratioDisplay.innerHTML =
             "ratio: " +
             ratio +
@@ -189,7 +192,7 @@ function updateImage() {
 
 function resetGame() {
     nextLevel()
-    setTimeout(captureReference, 200)
+    setTimeout(captureReference, 1000)
     controls.update = true
 }
 
@@ -213,10 +216,26 @@ function loadLevel(name) {
 
 function nextLevel() {
     var levels = [
-        "shapes/C_shape.png",
-        "shapes/F_shape.png",
-        "shapes/G_shape.png",
-        "shapes/T_shape.png",
+        "shapes/A.png",
+        "shapes/C.png",
+        "shapes/E.png",
+        "shapes/F.png",
+        "shapes/H.png",
+        "shapes/i.png",
+        "shapes/i_red.png",
+        "shapes/K.png",
+        "shapes/L.png",
+        "shapes/M.png",
+        "shapes/N.png",
+        "shapes/O.png",
+        "shapes/P.png",
+        "shapes/Punkt.png",
+        "shapes/ri.png",
+        "shapes/S.png",
+        "shapes/T.png",
+        "shapes/u.png",
+        "shapes/V.png",
+        "shapes/X.png",
     ]
     var level = levels[Math.floor(Math.random() * levels.length)]
     loadLevel(level)
