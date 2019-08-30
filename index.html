@@ -10,16 +10,13 @@
     </head>
     <body>
         <video id="player" width=320 height=240 controls autoplay></video>
-        <img id="levelImg" src=""/>
 
         <canvas id="original" width=320 height=240></canvas>
         <canvas id="reference" width=320 height=240></canvas>
-        <canvas id="level" width=320 height=240></canvas>
         <canvas id="difference" width=320 height=240></canvas>
         <canvas id="threshold" width=320 height=240></canvas>
 
         <div id="ratio"></div>
-        <button onClick="enableFullscreen()">fullscreen</button>
         <button onClick="captureReference()">reference</button>
 
         <script src="script.js"></script>

@@ -26,11 +26,6 @@ const contextDifference = canvasDifference.getContext("2d")
 
 const ratioDisplay = document.getElementById("ratio")
 
-const levelImg = document.getElementById("levelImg")
-
-const canvasLevel = document.getElementById("level")
-const contextLevel = canvasLevel.getContext("2d")
-
 const constraints = {
     video: true,
 }
@@ -161,10 +156,6 @@ function updateImage() {
     }
 }
 
-function enableFullscreen() {
-    canvasLevel.requestFullscreen()
-}
-
 function captureReference() {
     captured = contextOriginal.getImageData(
         0,
@@ -182,16 +173,8 @@ function captureReference() {
 }
 
 function loadLevel(name) {
-    levelImg.src = name
-    levelImg.onload = function() {
-        contextLevel.drawImage(
-            levelImg,
-            0,
-            0,
-            canvasLevel.width,
-            canvasLevel.height,
-        )
-    }
+    localStorage.setItem("shadowlevel", name)
+    console.log(name)
 }
 
 function nextLevel() {
@@ -199,7 +182,6 @@ function nextLevel() {
         "shapes/C_shape.png",
         "shapes/F_shape.png",
         "shapes/G_shape.png",
-        "shapes/SYI_shapes.ai",
         "shapes/T_shape.png",
     ]
     var level = levels[Math.floor(Math.random() * levels.length)]
