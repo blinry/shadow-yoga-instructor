@@ -2,7 +2,7 @@ function Controls() {
     this.threshold = 110
     this.update = true
     this.winPercent = 0.95
-    this.losePercent = 0.15
+    this.losePercent = 0.20
 }
 
 controls = new Controls()
