@@ -28,11 +28,18 @@ body {
 }
 
 #win,
-#lose {
+#lose,
+#black {
     position: absolute;
     bottom: 0;
     height: 100vw;
     width: 2vw;
+}
+
+#black {
+    background: black;
+    width: 5vw !important;
+    left: 0;
 }
 
 #win {
@@ -41,6 +48,6 @@ body {
 }
 
 #lose {
-    background: #FF7777;
+    background: #FF0000;
     left: 2vw;
 }

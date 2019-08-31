@@ -23,14 +23,17 @@ function messageReceive(ev) {
         // levelImg.onload = function() {
         //     canvasContext.drawImage(levelImg, 0, 0, canvas.width, canvas.height)
         // }
+
+        winDiv.style.height = "0vh"
+        loseDiv.style.height = "0vh"
     } else if (ev.key == "shadowwin") {
         let percent = Math.min(Math.max(ev.newValue, 0), 1) * 100
         winDiv.style.height = percent + "vh"
-        // console.log(percent)
+        console.log("win: "+percent)
     } else if (ev.key == "shadowlose") {
         let percent = Math.min(Math.max(ev.newValue, 0), 1) * 100
         loseDiv.style.height = percent + "vh"
-        // console.log(percent)
+        console.log("lose: "+percent)
     }
 }
 
@@ -41,3 +44,6 @@ function uploadSnapshot(data) {
     form.append("image", data)
     request.send(form)
 }
+
+winDiv.style.height = "0vh"
+loseDiv.style.height = "0vh"
