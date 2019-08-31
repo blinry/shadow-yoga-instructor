@@ -22,8 +22,5 @@ function message_receive(ev) {
         let percent = Math.min(Math.max(ev.newValue, 0), 1) * 100
         winDiv.style.height = percent + "vh"
         console.log(percent)
-    } else if (ev.key == "shadowimage") {
-        console.log("got img")
-        canvasContext.putImageData(ev.newValue, 0, 0)
     }
 }
