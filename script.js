@@ -192,10 +192,12 @@ function updateImage() {
         if (!hasWon) {
 			var goal = goals[currentLevel]
 
+            var npixels = canvasOriginal.width * canvasOriginal.height
+
             whiteCoveredPercent =
                 (goal.white - covered.white) / (goal.white + 1)
 
-            redCoveredPercent =
+            redCoveredPercent = goal.red < 0.01 * npixels ? 0 :
                 (goal.red - covered.red) / (goal.red + 1)
 
             winBar = whiteCoveredPercent / controls.winPercent
