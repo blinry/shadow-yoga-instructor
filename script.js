@@ -53,9 +53,6 @@ const levels = [
         "shapes/X.png",
     ]
 
-var references = [
-	]
-	
 var currentLevel = 0
 	
 var reference = null
@@ -220,7 +217,7 @@ function updateImage() {
                 hasWon = true
                 localStorage.setItem("shadowlevel", "shapes/green.png")
                 setTimeout(takeSnapshot, 1000)
-                // nextLevel();
+                setTimeout(loadNextLevel, 10000)
             } else {
                 ratioDisplay.className = ""
             }
@@ -245,7 +242,7 @@ function resetGame() {
 
 function captureNextLevel() {
 	loadCurrentLevel()
-    setTimeout(captureReference, 1000)
+    setTimeout(captureReference, 500)
 }
 
 function captureReference() {
@@ -258,7 +255,6 @@ function captureReference() {
 
     //contextReference.putImageData(reference, 0, 0)
     goals.push(thresholdPerChannel(reference.data, controls.threshold))
-	references.push(references)
     //contextDifference.putImageData(reference, 0, 0
 	
 	if (currentLevel+1 == levels.length) {
@@ -273,6 +269,12 @@ function startGame() {
 	currentLevel = 0
 	loadCurrentLevel()
 	isRunning = true
+}
+
+function loadNextLevel() {
+	currentLevel++
+	loadCurrentLevel()
+	hasWon = false
 }
 
 function loadLevel(name) {
