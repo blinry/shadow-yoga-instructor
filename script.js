@@ -1,5 +1,5 @@
 function Controls() {
-    this.threshold = 110
+    this.threshold = 125
     this.update = true
     this.winPercent = 0.95
     this.losePercent = 0.20
@@ -33,30 +33,36 @@ const constraints = {
 }
 
 const levels = [
+    "shapes/T.png", // very easy
+
+    //"shapes/E.png", // gut und einfach
+    //"shapes/F.png", // gut und einfach
+
+    //"shapes/ri.png", // introduce 2
+    //"shapes/Punkt.png", // introduce 2
+
     //"shapes/A.png",
     //"shapes/C.png",
-    //"shapes/E.png",
-    //"shapes/F.png",
     //"shapes/H.png",
     //"shapes/i.png",
-    //"shapes/i_red.png",
-    //"shapes/K.png",
     //"shapes/L.png",
     //"shapes/M.png",
     //"shapes/N.png",
     //"shapes/O.png",
     //"shapes/P.png",
-    //"shapes/Punkt.png",
-    //"shapes/ri.png",
+
     //"shapes/S.png",
-    //"shapes/T.png",
     //"shapes/u.png",
     //"shapes/V.png",
     //"shapes/X.png",
-    "shapes/c_red.png",
-    "shapes/o_red.png",
-    "shapes/K_red.png",
-    "shapes/T_red.png",
+
+    //"shapes/K.png", // hard
+
+    //"shapes/i_red.png",
+    //"shapes/T_red.png",
+    //"shapes/o_red.png",
+    //"shapes/K_red.png",
+    //"shapes/c_red.png",
 ]
 
 const startSpeech = [
@@ -252,8 +258,8 @@ function updateImage() {
                 hasWon = true
                 localStorage.setItem("shadowlevel", "shapes/green.png")
                 sayRandom(winSpeech)
-                setTimeout(takeSnapshot, 1000)
-                setTimeout(loadNextLevel, 6000)
+                setTimeout(takeSnapshot, 500)
+                setTimeout(loadNextLevel, 500+5000)
             } else {
                 ratioDisplay.className = ""
             }
@@ -269,6 +275,9 @@ function takeSnapshot() {
 }
 
 function resetGame() {
+    localStorage.setItem("shadowwin", 0)
+    localStorage.setItem("shadowlose", 0)
+
     hasWon = false
     isRunning = false
 
@@ -294,6 +303,8 @@ function captureReference() {
     //contextReference.putImageData(reference, 0, 0)
     var goal = thresholdPerChannel(reference.data, controls.threshold)
     references.push(reference)
+    console.log("?")
+    console.log(reference)
     goals.push(goal)
     //contextDifference.putImageData(reference, 0, 0
 
@@ -328,7 +339,9 @@ function loadCurrentLevel() {
     loadLevel(level)
 
     var reference = references[currentLevel]
-    canvasReference.putImageData(reference, 0, 0)
+    if (reference) {
+        contextReference.putImageData(reference, 0, 0)
+    }
 }
 
 function sayRandom(texts) {

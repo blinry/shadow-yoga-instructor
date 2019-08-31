@@ -17,7 +17,9 @@ function messageReceive(ev) {
         //canvasDiv.style.backgroundImage = "url(" + message + ")"
 
         levelImg.src = message
-        setTimeout(0, () => uploadSnapshot(message))
+        if (message.startsWith("data:image/png")) {
+            setTimeout(() => uploadSnapshot(message), 0)
+        }
         // levelImg.onload = function() {
         //     canvasContext.drawImage(levelImg, 0, 0, canvas.width, canvas.height)
         // }
