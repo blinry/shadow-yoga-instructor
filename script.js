@@ -35,34 +35,34 @@ const constraints = {
 const levels = [
     "shapes/T.png", // very easy
 
-    //"shapes/E.png", // gut und einfach
-    //"shapes/F.png", // gut und einfach
+    "shapes/E.png", // gut und einfach
+    "shapes/F.png", // gut und einfach
 
-    //"shapes/ri.png", // introduce 2
-    //"shapes/Punkt.png", // introduce 2
+    "shapes/ri.png", // introduce 2
+    "shapes/Punkt.png", // introduce 2
 
-    //"shapes/A.png",
-    //"shapes/C.png",
-    //"shapes/H.png",
-    //"shapes/i.png",
-    //"shapes/L.png",
-    //"shapes/M.png",
-    //"shapes/N.png",
-    //"shapes/O.png",
-    //"shapes/P.png",
+    "shapes/A.png",
+    "shapes/C.png",
+    "shapes/H.png",
+    "shapes/i.png",
+    "shapes/L.png",
+    "shapes/M.png",
+    "shapes/N.png",
+    "shapes/O.png",
+    "shapes/P.png",
 
-    //"shapes/S.png",
-    //"shapes/u.png",
-    //"shapes/V.png",
-    //"shapes/X.png",
+    "shapes/S.png",
+    "shapes/u.png",
+    "shapes/V.png",
+    "shapes/X.png",
 
-    //"shapes/K.png", // hard
+    "shapes/K.png", // hard
 
-    //"shapes/i_red.png",
-    //"shapes/T_red.png",
-    //"shapes/o_red.png",
-    //"shapes/K_red.png",
-    //"shapes/c_red.png",
+    "shapes/i_red.png",
+    "shapes/T_red.png",
+    "shapes/o_red.png",
+    "shapes/K_red.png",
+    "shapes/c_red.png",
 ]
 
 const startSpeech = [
