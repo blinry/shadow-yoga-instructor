@@ -55,8 +55,37 @@ const levels = [
     "shapes/X.png",
     "shapes/c_red.png",
     "shapes/o_red.png",
-    "shapes/k_red.png",
+    "shapes/K_red.png",
     "shapes/T_red.png",
+]
+
+const startSpeech = [
+    "Viel Glück!",
+    "Und los!",
+    "Los!",
+    "Los, los!",
+    "Hop, hop!",
+    "Tu, was ich sage!",
+    "Folge mir!",
+    "Hör zu!",
+    "Gehorche, Mensch!",
+    "Guten Tag!",
+    "Hallo!",
+    "Ich möchte ein Spiel spielen!",
+]
+const winSpeech = [
+    "Gut gemacht!",
+    "Nicht schlecht!",
+    "OK!",
+    "Na endlich...",
+    "Ja.",
+    "Korrekt.",
+    "Danke.",
+    "Hm-hm.",
+    "Ganz OK.",
+    "Nagut",
+    "Naja...",
+    "Das hat aber lange gedauert...",
 ]
 
 var currentLevel = 0
@@ -222,6 +251,7 @@ function updateImage() {
                 ratioDisplay.className = "win"
                 hasWon = true
                 localStorage.setItem("shadowlevel", "shapes/green.png")
+                sayRandom(startSpeech)
                 setTimeout(takeSnapshot, 1000)
                 setTimeout(loadNextLevel, 10000)
             } else {
@@ -281,6 +311,7 @@ function loadNextLevel() {
     currentLevel++
     loadCurrentLevel()
     hasWon = false
+    sayRandom(winSpeech)
 }
 
 function loadLevel(name) {
@@ -291,6 +322,14 @@ function loadLevel(name) {
 function loadCurrentLevel() {
     var level = levels[currentLevel]
     loadLevel(level)
+}
+
+function sayRandom(texts) {
+    say(texts[Math.floor(Math.random()*texts.length)])
+}
+
+function say(text) {
+    responsiveVoice.speak(text, "Deutsch Female", {rate: 0.4, pitch: 0.2});
 }
 
 // Attach the video stream to the video element and autoplay.
