@@ -30,9 +30,35 @@ const constraints = {
     video: true,
 }
 
-var reference = null
-var goal = {white: 0, red: 0}
+const levels = [
+        "shapes/A.png",
+        "shapes/C.png",
+        "shapes/E.png",
+        "shapes/F.png",
+        "shapes/H.png",
+        "shapes/i.png",
+        "shapes/i_red.png",
+        "shapes/K.png",
+        "shapes/L.png",
+        "shapes/M.png",
+        "shapes/N.png",
+        "shapes/O.png",
+        "shapes/P.png",
+        "shapes/Punkt.png",
+        "shapes/ri.png",
+        "shapes/S.png",
+        "shapes/T.png",
+        "shapes/u.png",
+        "shapes/V.png",
+        "shapes/X.png",
+    ]
 
+var currentLevel = 0
+	
+var reference = null
+var goals = []
+
+var isRunning = false
 var hasWon = false
 
 function thresholdPerChannel(data, level) {
@@ -150,7 +176,7 @@ function updateImage() {
 
     var brightPixels = 0
 
-    if (reference != null) {
+    if (isRunning) {
         var image = contextOriginal.getImageData(
             0,
             0,
@@ -162,6 +188,7 @@ function updateImage() {
         contextThreshold.putImageData(image, 0, 0)
 
         if (!hasWon) {
+			var goal = goals[currentLevel]
             white = 1 - covered.white / (goal.white + 1)
             red = 1 - covered.red / (goal.red + 1)
 
@@ -190,7 +217,7 @@ function updateImage() {
                 hasWon = true
                 localStorage.setItem("shadowlevel", "shapes/green.png")
                 setTimeout(takeSnapshot, 1000)
-                // nextLevel();
+                setTimeout(loadNextLevel, 10000)
             } else {
                 ratioDisplay.className = ""
             }
@@ -208,9 +235,14 @@ function takeSnapshot() {
 function resetGame() {
     hasWon = false
     reference = null
-    nextLevel()
-    setTimeout(captureReference, 1000)
+    
     controls.update = true
+	captureNextLevel()
+}
+
+function captureNextLevel() {
+	loadCurrentLevel()
+    setTimeout(captureReference, 500)
 }
 
 function captureReference() {
@@ -221,9 +253,28 @@ function captureReference() {
         canvasOriginal.height,
     )
 
-    contextReference.putImageData(reference, 0, 0)
-    goal = thresholdPerChannel(reference.data, controls.threshold)
-    contextDifference.putImageData(reference, 0, 0)
+    //contextReference.putImageData(reference, 0, 0)
+    goals.push(thresholdPerChannel(reference.data, controls.threshold))
+    //contextDifference.putImageData(reference, 0, 0
+	
+	if (currentLevel+1 == levels.length) {
+		startGame()
+	} else {
+		currentLevel++
+		captureNextLevel()
+	}	
+}
+
+function startGame() {
+	currentLevel = 0
+	loadCurrentLevel()
+	isRunning = true
+}
+
+function loadNextLevel() {
+	currentLevel++
+	loadCurrentLevel()
+	hasWon = false
 }
 
 function loadLevel(name) {
@@ -231,30 +282,8 @@ function loadLevel(name) {
     console.log(name)
 }
 
-function nextLevel() {
-    var levels = [
-        "shapes/A.png",
-        "shapes/C.png",
-        "shapes/E.png",
-        "shapes/F.png",
-        "shapes/H.png",
-        "shapes/i.png",
-        "shapes/i_red.png",
-        "shapes/K.png",
-        "shapes/L.png",
-        "shapes/M.png",
-        "shapes/N.png",
-        "shapes/O.png",
-        "shapes/P.png",
-        "shapes/Punkt.png",
-        "shapes/ri.png",
-        "shapes/S.png",
-        "shapes/T.png",
-        "shapes/u.png",
-        "shapes/V.png",
-        "shapes/X.png",
-    ]
-    var level = levels[Math.floor(Math.random() * levels.length)]
+function loadCurrentLevel() {
+    var level = levels[currentLevel]
     loadLevel(level)
 }
 
