@@ -1,5 +1,5 @@
 function Controls() {
-    this.threshold = 150
+    this.threshold = 110
     this.update = true
     this.winPercent = 0.95
     this.losePercent = 0.15
@@ -33,26 +33,26 @@ const constraints = {
 }
 
 const levels = [
-    "shapes/A.png",
-    "shapes/C.png",
-    "shapes/E.png",
-    "shapes/F.png",
-    "shapes/H.png",
-    "shapes/i.png",
-    "shapes/i_red.png",
-    "shapes/K.png",
-    "shapes/L.png",
-    "shapes/M.png",
-    "shapes/N.png",
-    "shapes/O.png",
-    "shapes/P.png",
-    "shapes/Punkt.png",
-    "shapes/ri.png",
-    "shapes/S.png",
-    "shapes/T.png",
-    "shapes/u.png",
-    "shapes/V.png",
-    "shapes/X.png",
+    //"shapes/A.png",
+    //"shapes/C.png",
+    //"shapes/E.png",
+    //"shapes/F.png",
+    //"shapes/H.png",
+    //"shapes/i.png",
+    //"shapes/i_red.png",
+    //"shapes/K.png",
+    //"shapes/L.png",
+    //"shapes/M.png",
+    //"shapes/N.png",
+    //"shapes/O.png",
+    //"shapes/P.png",
+    //"shapes/Punkt.png",
+    //"shapes/ri.png",
+    //"shapes/S.png",
+    //"shapes/T.png",
+    //"shapes/u.png",
+    //"shapes/V.png",
+    //"shapes/X.png",
     "shapes/c_red.png",
     "shapes/o_red.png",
     "shapes/K_red.png",
@@ -251,9 +251,9 @@ function updateImage() {
                 ratioDisplay.className = "win"
                 hasWon = true
                 localStorage.setItem("shadowlevel", "shapes/green.png")
-                sayRandom(startSpeech)
+                sayRandom(winSpeech)
                 setTimeout(takeSnapshot, 1000)
-                setTimeout(loadNextLevel, 10000)
+                setTimeout(loadNextLevel, 6000)
             } else {
                 ratioDisplay.className = ""
             }
@@ -270,6 +270,7 @@ function takeSnapshot() {
 
 function resetGame() {
     hasWon = false
+    isRunning = false
 
     controls.update = true
     references = []
@@ -279,7 +280,7 @@ function resetGame() {
 
 function captureNextLevel() {
     loadCurrentLevel()
-    setTimeout(captureReference, 500)
+    setTimeout(captureReference, 1000)
 }
 
 function captureReference() {
@@ -311,10 +312,10 @@ function startGame() {
 }
 
 function loadNextLevel() {
-    currentLevel++
+    currentLevel = (currentLevel + 1) % levels.length
     loadCurrentLevel()
-    hasWon = false
-    sayRandom(winSpeech)
+    sayRandom(startSpeech)
+    setTimeout(function() {hasWon = false}, 1000)
 }
 
 function loadLevel(name) {
@@ -343,5 +344,5 @@ navigator.mediaDevices.getUserMedia(constraints).then(stream => {
     player.srcObject = stream
 })
 
-loadLevel("shapes/G_shape.png")
+//loadLevel("shapes/G_shape.png")
 setInterval(updateImage, 100)
