@@ -3,7 +3,7 @@
 // const canvas = document.getElementById("level")
 // const canvasContext = canvas.getContext("2d")
 const winDiv = document.getElementById("win")
-//const loseDiv = document.getElementById("lose")
+const loseDiv = document.getElementById("lose")
 
 window.addEventListener("storage", messageReceive)
 
@@ -24,7 +24,11 @@ function messageReceive(ev) {
     } else if (ev.key == "shadowwin") {
         let percent = Math.min(Math.max(ev.newValue, 0), 1) * 100
         winDiv.style.height = percent + "vh"
-        console.log(percent)
+        // console.log(percent)
+    } else if (ev.key == "shadowlose") {
+        let percent = Math.min(Math.max(ev.newValue, 0), 1) * 100
+        loseDiv.style.height = percent + "vh"
+        // console.log(percent)
     }
 }
 
