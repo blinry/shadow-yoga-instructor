@@ -90,7 +90,7 @@ const winSpeech = [
 
 var currentLevel = 0
 
-var reference = null
+var references = []
 var goals = []
 
 var isRunning = false
@@ -270,9 +270,10 @@ function takeSnapshot() {
 
 function resetGame() {
     hasWon = false
-    reference = null
 
     controls.update = true
+    references = []
+    goals = []
     captureNextLevel()
 }
 
@@ -282,7 +283,7 @@ function captureNextLevel() {
 }
 
 function captureReference() {
-    reference = contextOriginal.getImageData(
+    var reference = contextOriginal.getImageData(
         0,
         0,
         canvasOriginal.width,
@@ -290,7 +291,9 @@ function captureReference() {
     )
 
     //contextReference.putImageData(reference, 0, 0)
-    goals.push(thresholdPerChannel(reference.data, controls.threshold))
+    var goal = thresholdPerChannel(reference.data, controls.threshold)
+    references.push(reference)
+    goals.push(goal)
     //contextDifference.putImageData(reference, 0, 0
 
     if (currentLevel + 1 == levels.length) {
@@ -322,6 +325,9 @@ function loadLevel(name) {
 function loadCurrentLevel() {
     var level = levels[currentLevel]
     loadLevel(level)
+
+    var reference = references[currentLevel]
+    canvasReference.putImageData(reference, 0, 0)
 }
 
 function sayRandom(texts) {

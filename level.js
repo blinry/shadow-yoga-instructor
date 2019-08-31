@@ -7,7 +7,7 @@ const loseDiv = document.getElementById("lose")
 
 window.addEventListener("storage", messageReceive)
 
-const serverURL = "http://gidonernst.de/shadow-yoga-instructor/?snap"
+const serverURL = "http://gidonernst.de/shadow-yoga-instructor/"
 
 function messageReceive(ev) {
     if (ev.key == "shadowlevel") {
