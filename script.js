@@ -1,14 +1,16 @@
 function Controls() {
     this.threshold = 150
     this.update = true
-    this.win_percent = 0.95
+    this.winPercent = 0.95
+    this.losePercent = 0.15
 }
 
 controls = new Controls()
 gui = new dat.GUI()
 gui.add(controls, "threshold", 0, 255)
 gui.add(controls, "update", true)
-gui.add(controls, "win_percent", 0, 1)
+gui.add(controls, "winPercent", 0, 1)
+gui.add(controls, "losePercent", 0, 1)
 
 const player = document.getElementById("player")
 
@@ -189,30 +191,28 @@ function updateImage() {
 
         if (!hasWon) {
 			var goal = goals[currentLevel]
-            white = 1 - covered.white / (goal.white + 1)
-            red = 1 - covered.red / (goal.red + 1)
+
+            var npixels = canvasOriginal.width * canvasOriginal.height
 
             whiteCoveredPercent =
                 (goal.white - covered.white) / (goal.white + 1)
 
-            ratio = whiteCoveredPercent
-            ratioBar = ratio / controls.win_percent
-            localStorage.setItem("shadowwin", ratioBar)
-            ratioDisplay.innerHTML =
-                "ratio: " +
-                ratio +
-                " (white: " +
-                covered.white +
-                "/" +
-                goal.white +
-                ", red: " +
-                covered.red +
-                "/" +
-                goal.red +
-                ")"
+            redCoveredPercent = goal.red < 0.01 * npixels ? 0 :
+                (goal.red - covered.red) / (goal.red + 1)
 
-            var win = ratio >= controls.win_percent
-            if (win) {
+            winBar = whiteCoveredPercent / controls.winPercent
+            loseBar = redCoveredPercent / controls.losePercent
+
+            localStorage.setItem("shadowwin", winBar)
+            localStorage.setItem("shadowlose", loseBar)
+
+            ratioDisplay.innerHTML =
+                "win: " + whiteCoveredPercent + ", lose: " + redCoveredPercent
+
+            var win = whiteCoveredPercent >= controls.winPercent
+            var lose = redCoveredPercent >= controls.losePercent
+
+            if (win && !lose) {
                 ratioDisplay.className = "win"
                 hasWon = true
                 localStorage.setItem("shadowlevel", "shapes/green.png")

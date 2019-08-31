@@ -14,10 +14,6 @@ canvas {
     display: none;
 }
 
-.win {
-    background: green;
-}
-
 html,
 body {
     height: 100%;
@@ -39,11 +35,11 @@ body {
 }
 
 #win {
-    background: green;
+    background: #00FF00;
     left: 0;
 }
 
 #lose {
-    background: red;
+    background: #FF0000;
     left: 2vw;
 }
