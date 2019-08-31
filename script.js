@@ -53,6 +53,10 @@ const levels = [
         "shapes/u.png",
         "shapes/V.png",
         "shapes/X.png",
+		"shapes/c_red.png",
+		"shapes/o_red.png",
+		"shapes/k_red.png",
+		"shapes/T_red.png",
     ]
 
 var currentLevel = 0
