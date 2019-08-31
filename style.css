@@ -1,10 +1,15 @@
 video,
-img {
-    width: 320px;
-    height: 240px;
+img,
+canvas {
+    width: 400px;
+    height: 250px;
 }
 
-#levelImg,
+#levelImg {
+    min-width: 100%;
+    min-height: 100%;
+}
+
 #player {
     display: none;
 }
@@ -17,12 +22,28 @@ html,
 body {
     height: 100%;
     margin: 0;
+    background: black;
 }
 
 #level {
-    background: black;
-    background-size: contain;
-    background-position: center center;
-    background-repeat: no-repeat;
     min-height: 100%;
+    margin: 0 auto;
+}
+
+#win,
+#lose {
+    position: absolute;
+    bottom: 0;
+    height: 100vw;
+    width: 2vw;
+}
+
+#win {
+    background: green;
+    left: 0;
+}
+
+#lose {
+    background: red;
+    left: 2vw;
 }
