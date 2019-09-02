@@ -1,8 +1,7 @@
 Shadow Yoga Instructor
 ======================
 
-The [Shadow Yoga Instructor](https://github.com/blinry/shadow-yoga-instructor)
-is a game  about being invisible.
+The *Shadow Yoga Instructor* is a game  about being invisible.
 By using  your own body to block and absorb light, you are able to reach a
 higher state of being.
 
