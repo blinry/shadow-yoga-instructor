@@ -7,7 +7,7 @@ const loseDiv = document.getElementById("lose")
 
 window.addEventListener("storage", messageReceive)
 
-const serverURL = "http://gidonernst.de/shadow-yoga-instructor/"
+const serverURL = null
 
 function messageReceive(ev) {
     if (ev.key == "shadowlevel") {
@@ -38,11 +38,13 @@ function messageReceive(ev) {
 }
 
 function uploadSnapshot(data) {
-    var request = new XMLHttpRequest();
-    request.open("POST", serverURL, true)
-    var form = new FormData()
-    form.append("image", data)
-    request.send(form)
+    if(serverURL) {
+        var request = new XMLHttpRequest();
+        request.open("POST", serverURL, true)
+        var form = new FormData()
+        form.append("image", data)
+        request.send(form)
+    }
 }
 
 winDiv.style.height = "0vh"
